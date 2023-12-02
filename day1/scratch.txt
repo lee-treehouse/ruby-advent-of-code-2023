@@ -1,0 +1,15 @@
+1blahtwoneight5
+
+1blah2oeight5
+
+replaced t with 2 
+delete w 
+delete o 
+
+but i deleted w and n 
+
+1blahtwoneight5
+
+1blah2neight5
+
+1blah2n85 - length 9 can check for 3 letters when index is 6, four letters when index is 5 (length - 4) 
