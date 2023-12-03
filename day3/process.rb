@@ -1,15 +1,31 @@
 # frozen_string_literal: true
 
-def process(line)
-  puts line
+# rubocop:disable Metrics/MethodLength
+def get_adjacent_coordinates(token_index, token_length, line_index, line_length, line_count)
+  lookup_cols_index_start = token_index.positive? ? token_index - 1 : 0
+  lookup_cols_index_end = token_index + token_length
+
+  # it's got the line terminating character that's why we need to subtract 2 not 1
+  lookup_cols_index_end = line_length - 2 if lookup_cols_index_end > (line_length - 2)
+
+  rows_to_lookup = []
+  rows_to_lookup.push(line_index - 1) if line_index.positive?
+  rows_to_lookup.push(line_index + 1) if line_index < line_count
+
+  {
+    "lookup_cols_index_start": lookup_cols_index_start,
+    "lookup_cols_index_end": lookup_cols_index_end,
+    "rows_to_lookup": rows_to_lookup
+  }
 end
+# rubocop:enable Metrics/MethodLength
 
 def is_number(value)
   result = value.match(/\d+/)
   result&.length&.positive?
 end
 
-def isSymbol(char)
+def is_symbol(char)
   result = char.match(/[^0-9.a-zA-Z]/)
   result&.length&.positive?
 end
@@ -45,24 +61,19 @@ for line_index in 0..line_counter
   tokens_in_line.each do |token|
     if is_number(token)
 
-      character_index = char_count_in_line
+      adjacent_coordinates = get_adjacent_coordinates(char_count_in_line,
+                                                      token.length, line_index, line.length, line_counter)
 
-      lookup_cols_index_start = character_index.positive? ? character_index - 1 : 0
-      lookup_cols_index_end = character_index + token.to_s.length
-
-      # it's got the line terminating character that's why we need to subtract 2 not 1
-      lookup_cols_index_end = line.length - 2 if lookup_cols_index_end > (line.length - 2)
-
-      rows_to_lookup = []
-      rows_to_lookup.push(line_index - 1) if line_index.positive?
-      rows_to_lookup.push(line_index + 1) if line_index < line_counter
+      lookup_cols_index_start, lookup_cols_index_end, rows_to_lookup = adjacent_coordinates.values_at(
+        :lookup_cols_index_start, :lookup_cols_index_end, :rows_to_lookup
+      )
 
       adjacent_symbol_found = false
-      adjacent_symbol_found = true if isSymbol(line[lookup_cols_index_start]) || isSymbol(line[lookup_cols_index_end])
+      adjacent_symbol_found = true if is_symbol(line[lookup_cols_index_start]) || is_symbol(line[lookup_cols_index_end])
 
       rows_to_lookup.each do |row|
         for col_index in lookup_cols_index_start..lookup_cols_index_end
-          adjacent_symbol_found = true if isSymbol(values_by_row_hash[row][col_index])
+          adjacent_symbol_found = true if is_symbol(values_by_row_hash[row][col_index])
           end
       end
 
@@ -81,3 +92,4 @@ part_numbers.each do |part_number|
 end
 
 puts total
+# 520135
