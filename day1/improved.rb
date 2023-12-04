@@ -21,21 +21,21 @@ def generate_calibration_value_including_named_digits(line)
 end
 
 WORD_TO_DIGIT = {
-  one: '1',
-  two: '2',
-  three: '3',
-  four: '4',
-  five: '5',
-  six: '6',
-  seven: '7',
-  eight: '8',
-  nine: '9'
+  'one' => '1',
+  'two' => '2',
+  'three' => '3',
+  'four' => '4',
+  'five' => '5',
+  'six' => '6',
+  'seven' => '7',
+  'eight' => '8',
+  'nine' => '9'
 }.freeze
 
 def convert_word_to_digit(word)
   return word if %w[1 2 3 4 5 6 7 8 9].include?(word)
 
-  WORD_TO_DIGIT[word.to_sym]
+  WORD_TO_DIGIT[word]
 end
 
 file_name = './day1/input.txt'

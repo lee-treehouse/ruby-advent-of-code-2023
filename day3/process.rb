@@ -77,7 +77,10 @@ for line_index in 0..line_counter
           end
       end
 
-      part_numbers.push(token) if adjacent_symbol_found == true
+      if adjacent_symbol_found == true
+        part_numbers.push({ 'token' => token, 'line_index' => line_index,
+                            'col_index' => char_count_in_line })
+      end
     end
     char_count_in_line += token.length + 1
   end
@@ -88,8 +91,15 @@ end
 total = 0
 
 part_numbers.each do |part_number|
-  total += part_number.to_i
+  total += part_number['token'].to_i
 end
 
+puts 'Part Numbers Total'
 puts total
 # 520135
+
+# A gear is any * symbol that is adjacent to exactly two part numbers.
+# find every *
+# find adjacency coordinates
+# see which part numbers are there
+# the edge case will be more than two part numbers being adjacent and maybe adjacent *s
